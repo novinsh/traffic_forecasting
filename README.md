@@ -8,10 +8,9 @@
 - `learn_edge_counts.py` script to learn edges counts based on the cluster centers.
 
 ### data setup
-After downloading and preparing the data using the two scripts following directories will be created.
+After downloading and preparing the data using the two scripts, following directories will be created.
 
 - **`aggregated/`**: Contains small data
 - **`data/`**: Contains full/large data
 - **`edge_info.csv`**: graph of the network could be constructed based on
 - **`tartu_edge.csv`**: ???
-
