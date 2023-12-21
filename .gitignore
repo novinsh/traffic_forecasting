@@ -1,3 +1,10 @@
+# data folders
+aggregated/
+data/
+*.pkl
+*.zip
+*.csv
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
