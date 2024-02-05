@@ -34,6 +34,7 @@ def load_count_files(list_files, ratio=1):
 	return count_traffic_list
 
 #%%
+# car sampling based on the penetration rate
 def sample_data(list_files, ratio=1):
  
     alldata_list = load_count_files(list_files, ratio=ratio)
