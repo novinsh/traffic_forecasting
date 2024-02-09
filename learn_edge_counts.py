@@ -57,13 +57,19 @@ plt.show()
 from sklearn.model_selection import train_test_split
 
 # transpose so that n_clusters will be n_features
+
+cluster_no=0
+ts_in_cluster_zero = values[y_pred == cluster_no]
+#X_ = np.random.choice(ts_in_cluster_zero, size=10)
+
+
 X_ = km.cluster_centers_[:,:,0].T
 y_ = X.T
 
 print(X_.shape)
 print(y_.shape)
 
-X_tr, X_te, y_tr, y_te = train_test_split(X_, y_, train_size=0.8)
+X_tr, X_te, y_tr, y_te = train_test_split(X_, y_, train_size=0.9)
 
 # by default, keras tensors accept float32 and not float64
 X_tr = X_tr.astype('float32')
@@ -95,7 +101,7 @@ model.add(Dense(128, activation='relu'))
 model.add(Dense(output_shape, activation='softplus'))
 
 model.compile(loss='mean_absolute_error', optimizer='adam')
-model.fit(X_tr, y_tr, epochs=20, batch_size=16, verbose=1, validation_split=0.2)
+model.fit(X_tr, y_tr, epochs=100, batch_size=16, verbose=1, validation_split=0.1)
 
 y_hat = model.predict(X_te)
 
@@ -111,7 +117,15 @@ print(f"MAE: {mae}")
 print(f"RMSE: {np.sqrt(mse)}")
 
 # histogram of the errors 
-plt.hist(y_te.flatten(), alpha=0.5, label='obs')
-plt.hist(y_hat.flatten(), alpha=0.5, label='pred')
+plt.hist(y_te.flatten(), alpha=0.5, label='obs',bins=100)
+plt.hist(y_hat.flatten(), alpha=0.5, label='pred',bins=100)
 plt.legend()
 plt.show()
+# %%
+yy_hat = model.predict(X_tr)
+mae_ = mean_absolute_error(y_tr, yy_hat)
+mse_ = mean_squared_error(y_tr, yy_hat)
+
+print(f"MAE: {mae_}") 
+print(f"RMSE: {np.sqrt(mse_)}")
+# %%
