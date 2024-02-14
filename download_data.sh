@@ -11,3 +11,4 @@ wget "https://www.dropbox.com/scl/fi/itb2iv38cqhnf74cz7zv0/tartu_edge.csv?rlkey=
 # saved models
 # download saved models to reuse
 wget "https://www.dropbox.com/scl/fi/f3y2xj662yfam8de63zu5/cluster_model.pkl?rlkey=msfffwfam06d41ruw0besa4ox&dl=0" -O cluster_model.pkl
+wget "https://www.dropbox.com/scl/fi/didmledouri7ibnrnsoag/cluster_model_medoids_ratio_.zip?rlkey=7yx41wwtjmi0xago3kvwjko2v&dl=0" -o cluster_model_medoids_ratio_.zip
