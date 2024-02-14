@@ -95,6 +95,11 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 
+# TODO:
+# 1. weight initialization - https://keras.io/api/layers/initializers/
+# 2. weight regularization - helps to keep epochs high and overfitting minimal: kernel term (w1) / bias term (w0): a w_1 + w_0.  https://keras.io/api/layers/regularizers/
+# 3. early stopping - helps to stop training if training already saturates or in other words to detect the overfitting early and stop https://keras.io/api/callbacks/early_stopping/
+
 model = Sequential()
 model.add(Dense(64, input_shape=(input_shape,), activation='relu'))
 model.add(Dense(128, activation='relu'))
