@@ -7,6 +7,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import glob
 import random
+import datetime
+
 random.seed(6531)
 
 count_pattern = r"data/*_count.csv"
@@ -35,8 +37,9 @@ def load_count_files(list_files, ratio=1):
 
 #%%
 # car sampling based on the penetration rate
-def sample_data(list_files, ratio=1):
- 
+def sample_data(list_files , edgeinfofile, ratio=100):
+    
+    ratio = ratio/100
     alldata_list = load_count_files(list_files, ratio=ratio)
     df_traffic = pd.concat(alldata_list)
     merge_hour_and_date = lambda df: pd.to_datetime(df['date']) + pd.to_timedelta(df['hour'], unit='h')
@@ -46,7 +49,7 @@ def sample_data(list_files, ratio=1):
         datelist.append(file_name.split("/")[-1].split("_")[0])
     
     hourlist = list(range(24))
-    edgelist = list(set(df_traffic["edge_id"]))
+    edgelist = list(set(pd.read_csv(edgeinfofile)["edge_id"]))
 
     df1 = pd.DataFrame({'date':datelist})
     df2 = pd.DataFrame({'hour':hourlist})  
@@ -65,7 +68,13 @@ def sample_data(list_files, ratio=1):
 
 #%%
 list_files = glob.glob(count_pattern)
-df_traffic_ratio_50 = sample_data(list_files=list_files, ratio=.5)
+ratiolist = [25, 50, 75, 100]
 
-#%%
-df_traffic_ratio_50
+for ratio in ratiolist:
+    df_traffic = sample_data(list_files=list_files,edgeinfofile="edge_info.csv", ratio=ratio)
+    #df_traffic.to_csv("sample_ratio_"+str(ratio)+".csv", index=False)
+    df = df_traffic
+    df_test  = df[df["timestamp"].apply(lambda x: x.date()==datetime.date(2023, 6, 14))]
+    df_train = df[df["timestamp"].apply(lambda x: x.date()!=datetime.date(2023, 6, 14))]
+    #df_test.to_csv("sample_ratio_"+str(ratio)+"_test.csv", index = False)
+    #df_train.to_csv("sample_ratio_"+str(ratio)+"_train.csv", index = False)
