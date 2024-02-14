@@ -12,7 +12,7 @@ n_cluster = 20
 
 def calculate_MAE(X_val, X_reconstructed):
     """ Calculate the MAE of the predicted matrix compared to the original matrix """
-    D = abs(X_val - X_reconstructed);
+    D = abs(X_val - X_reconstructed)
     MAE = np.mean(np.mean(abs(D)))
     # print("avg error:", MAE)
     max_error = np.max(D)
@@ -64,7 +64,7 @@ print(values.shape)
 print(timestamps.shape)
 
 # load the cluster model
-with open("cluster_model_medoids_ratio_"+str(ratio_train)+"_train_"+str(n_cluster)".pkl", "rb") as f:
+with open("cluster_model_medoids_ratio_"+str(ratio_train)+"_train_"+str(n_cluster)+".pkl", "rb") as f:
     km = pickle.load(f)
 
 #%%
@@ -106,7 +106,7 @@ X_tr = X_tr.astype('float32')
 y_tr = y_tr.astype('float32')
 
 #augment data
-X_tr, y_tr = augment_traffic_data(X_tr, y_tr)
+#X_tr, y_tr = augment_traffic_data(X_tr, y_tr)
 
 print(X_tr.shape)
 print(y_tr.shape)
