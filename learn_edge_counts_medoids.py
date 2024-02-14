@@ -122,20 +122,44 @@ print(f"Output shape: {output_shape}")
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from sklearn.metrics import mean_absolute_error, mean_squared_error
+from keras import initializers
+from keras import regularizers
+import keras
 
 
 # TODO:
 # 1. weight initialization - https://keras.io/api/layers/initializers/
 # 2. weight regularization - helps to keep epochs high and overfitting minimal: kernel term (w1) / bias term (w0): a w_1 + w_0.  https://keras.io/api/layers/regularizers/
 # 3. early stopping - helps to stop training if training already saturates or in other words to detect the overfitting early and stop https://keras.io/api/callbacks/early_stopping/
-
+callback = keras.callbacks.EarlyStopping(
+    monitor="val_loss",
+    min_delta=0,
+    patience=10,
+    verbose=0,
+    mode="auto",
+    baseline=None,
+    restore_best_weights=False,
+    start_from_epoch=0,
+)
 model = Sequential()
-model.add(Dense(64, input_shape=(input_shape,), activation='relu'))
-model.add(Dense(128, activation='relu'))
-model.add(Dense(output_shape, activation='softplus'))
-
+model.add(Dense(64, input_shape=(input_shape,), activation='relu',
+                 #kernel_initializer=initializers.RandomNormal(stddev=0.01),
+                 #bias_initializer=initializers.Zeros(),
+                 kernel_regularizer=regularizers.L1L2(l1=1e-5, l2=1e-4),
+                 bias_regularizer=regularizers.L2(1e-4),
+                 activity_regularizer=regularizers.L2(1e-5)))
+model.add(Dense(128, activation='relu',
+                 #kernel_initializer=initializers.RandomNormal(stddev=0.01),
+                 #bias_initializer=initializers.Zeros(),
+                 kernel_regularizer=regularizers.L1L2(l1=1e-5, l2=1e-4),
+                 bias_regularizer=regularizers.L2(1e-4),
+                 activity_regularizer=regularizers.L2(1e-5)))
+model.add(Dense(output_shape, activation='softplus')
+                #kernel_initializer=initializers.RandomNormal(stddev=0.01),
+                 #bias_initializer=initializers.Zeros())
+         )
 model.compile(loss='mean_absolute_error', optimizer='adam')
-model.fit(X_tr, y_tr, epochs=60, batch_size=16, verbose=1, validation_split=0.1)
+model.fit(X_tr, y_tr, epochs=1000, batch_size=16, verbose=1, validation_split=0.1, callbacks=[callback])
 
 """
 y_hat = model.predict(X_te)
