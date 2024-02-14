@@ -6,8 +6,9 @@ from matplotlib import pyplot as plt
 import pandas as pd
 import numpy as np
 
-ratio_train = 50
+ratio_train = 25
 ratio_test = 100
+n_cluster = 20
 
 def calculate_MAE(X_val, X_reconstructed):
     """ Calculate the MAE of the predicted matrix compared to the original matrix """
@@ -63,7 +64,7 @@ print(values.shape)
 print(timestamps.shape)
 
 # load the cluster model
-with open("cluster_model_medoids_ratio_"+str(ratio_train)+"_train.pkl", "rb") as f:
+with open("cluster_model_medoids_ratio_"+str(ratio_train)+"_train_"+str(n_cluster)".pkl", "rb") as f:
     km = pickle.load(f)
 
 #%%
@@ -105,7 +106,7 @@ X_tr = X_tr.astype('float32')
 y_tr = y_tr.astype('float32')
 
 #augment data
-#X_tr, y_tr = augment_traffic_data(X_tr, y_tr)
+X_tr, y_tr = augment_traffic_data(X_tr, y_tr)
 
 print(X_tr.shape)
 print(y_tr.shape)
@@ -134,11 +135,11 @@ import keras
 callback = keras.callbacks.EarlyStopping(
     monitor="val_loss",
     min_delta=0,
-    patience=10,
+    patience=100,
     verbose=0,
     mode="auto",
     baseline=None,
-    restore_best_weights=False,
+    restore_best_weights=True,
     start_from_epoch=0,
 )
 model = Sequential()
@@ -146,18 +147,18 @@ model.add(Dense(64, input_shape=(input_shape,), activation='relu',
                  #kernel_initializer=initializers.RandomNormal(stddev=0.01),
                  #bias_initializer=initializers.Zeros(),
                  kernel_regularizer=regularizers.L1L2(l1=1e-5, l2=1e-4),
-                 bias_regularizer=regularizers.L2(1e-4),
-                 activity_regularizer=regularizers.L2(1e-5)))
+                 bias_regularizer=regularizers.L2(1e-4)))
 model.add(Dense(128, activation='relu',
                  #kernel_initializer=initializers.RandomNormal(stddev=0.01),
                  #bias_initializer=initializers.Zeros(),
                  kernel_regularizer=regularizers.L1L2(l1=1e-5, l2=1e-4),
-                 bias_regularizer=regularizers.L2(1e-4),
-                 activity_regularizer=regularizers.L2(1e-5)))
-model.add(Dense(output_shape, activation='softplus')
+                 bias_regularizer=regularizers.L2(1e-4)))
+model.add(Dense(output_shape, activation='softplus',
                 #kernel_initializer=initializers.RandomNormal(stddev=0.01),
                  #bias_initializer=initializers.Zeros())
-         )
+                 kernel_regularizer=regularizers.L1L2(l1=1e-5, l2=1e-4)))
+                 #bias_regularizer=regularizers.L2(1e-4))
+         
 model.compile(loss='mean_absolute_error', optimizer='adam')
 model.fit(X_tr, y_tr, epochs=1000, batch_size=16, verbose=1, validation_split=0.1, callbacks=[callback])
 

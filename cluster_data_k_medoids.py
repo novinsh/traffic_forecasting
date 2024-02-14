@@ -7,6 +7,7 @@ import pickle
 from sklearn_extra.cluster import KMedoids
 
 ratiolist = [25,50,75,100]
+n_cluster = 30
 for ratio in ratiolist:
     # load data
     df_traffic = pd.read_csv("sample_ratio_" + str(ratio)+"_train.csv", index_col=0)
@@ -33,7 +34,6 @@ for ratio in ratiolist:
 
     # cluster the data
     X = values[:,:,1] 
-    n_cluster = 20
     km = KMedoids(n_clusters=n_cluster, metric='euclidean',method='pam',init='heuristic', max_iter=300, random_state=0)
     km = km.fit(X)
     y_pred = km.predict(X)
@@ -52,7 +52,7 @@ for ratio in ratiolist:
     plt.show()
 
 
-    # save the results for later 
-    #with open("cluster_model_medoids_ratio_"+str(ratio)+"_train.pkl", "wb") as f:
-    #    pickle.dump(km, f, pickle.HIGHEST_PROTOCOL)
+    #save the results for later 
+    with open("cluster_model_medoids_ratio_"+str(ratio)+"_train_"+str(n_cluster)+".pkl", "wb") as f:
+        pickle.dump(km, f, pickle.HIGHEST_PROTOCOL)
 
