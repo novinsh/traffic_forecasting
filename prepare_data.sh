@@ -11,10 +11,12 @@ if [ "$1" = "clean" ]; then
     rm tartu_edge.csv
     rm cluster_model.pkl
     rm cluster_model_medoids_ratio_.zip
+    rm sample_ratio_.zip
 else
     echo "Performing data operations..."
     # Unzip and preliminary data preparation 
     unzip data_small.zip
     unzip data_large.zip
     unzip cluster_model_medoids_ratio_.zip
+    unzip sample_ratio_.zip
 fi
